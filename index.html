@@ -1,30 +1,139 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hello World | EdgeOne</title>
-  <style>
-    :root { color-scheme: dark; font-family: system-ui, sans-serif; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #101827; color: #eef4ff; }
-    main { max-width: 36rem; padding: 3rem 1.5rem; text-align: center; }
-    h1 { font-size: clamp(2.5rem, 10vw, 5rem); margin: 0 0 1rem; }
-    p { line-height: 1.8; color: #c3d0e5; }
-    button { padding: .8rem 1.4rem; border: 0; border-radius: .7rem; background: #78c9ff; color: #101827; font: inherit; cursor: pointer; }
-    button:focus-visible { outline: 3px solid white; outline-offset: 4px; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#03050b">
+<meta name="description" content="十万粒子，在浏览器中描绘光的轨迹。">
+<title>流光 · Hello Universe</title>
+<style>
+:root{color-scheme:dark;font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#03050b;color:#edf3ff}*{box-sizing:border-box}body{margin:0;min-height:100svh;overflow-x:hidden}
+#universe{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+.fallback{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 55%,#12346b,#0a152f 28%,#03050b 65%)}
+.veil{position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,#03050b66,transparent 25%,transparent 65%,#03050bb3)}
+.page{position:relative;min-height:100svh;display:flex;flex-direction:column;padding:32px 5vw 24px}header,footer{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{font-size:13px;font-weight:600;letter-spacing:.22em}.edition{font-size:10px;letter-spacing:.2em;color:#8a9ab5}
+main{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:80px 0 110px}.eyebrow{font-size:10px;letter-spacing:.38em;color:#aec6ed;margin:0 0 30px}
+h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(70px,11vw,156px);line-height:1.04;font-weight:400;letter-spacing:-.065em;text-shadow:0 4px 45px #03050b88}h1 em{font-weight:400;color:#bedbff}
+.description{margin:30px 0 0;font-size:13px;line-height:2;letter-spacing:.22em;color:#b7c7df}footer{font-size:10px;letter-spacing:.14em;color:#8a9ab5}.status{display:flex;align-items:center;gap:9px}.dot{width:5px;height:5px;border-radius:50%;background:#a7d9ff;box-shadow:0 0 12px #77b9ff}#notice{max-width:260px;text-align:right;line-height:1.8}
+@media(max-width:600px){.page{padding:25px 24px}.edition{font-size:8px;letter-spacing:.08em}main{padding:90px 0}.eyebrow{font-size:8px;letter-spacing:.24em}h1{font-size:clamp(64px,17vw,100px)}.description{font-size:11px;letter-spacing:.12em}footer{font-size:8px;letter-spacing:.08em;gap:12px}}
+</style>
 </head>
 <body>
-  <main>
-    <h1>Hello World!</h1>
-    <p>这是我的第一个 EdgeOne 个人主页。</p>
-    <button id="hello" type="button">点击打个招呼</button>
-    <p id="message" aria-live="polite">网页已加载，试试上面的按钮。</p>
-  </main>
-  <script>
-    document.getElementById('hello').addEventListener('click', function () {
-      document.getElementById('message').textContent = '你好！前端交互运行正常。';
-    });
-  </script>
+<div class="fallback" aria-hidden="true"></div>
+<canvas id="universe" aria-hidden="true"></canvas>
+<div class="veil" aria-hidden="true"></div>
+<div class="page">
+<header><span class="brand">流光 / LUMEN</span><span class="edition">A PERSONAL UNIVERSE · 001</span></header>
+<main><p class="eyebrow">A QUIET MOMENT IN THE INFINITE</p><h1>Hello,<br><em>Universe.</em></h1><p class="description">让思绪，沿着光的方向流动。</p></main>
+<footer><span class="status"><span class="dot" aria-hidden="true"></span><span id="status">一片流动的星海</span></span><span id="notice">在此刻，与宇宙相遇。</span></footer>
+</div>
+<noscript><p style="position:relative;text-align:center">启用 JavaScript，即可观看粒子流动。</p></noscript>
+<script>
+(() => {
+'use strict';
+const PARTICLE_COUNT = 100000;
+const canvas = document.getElementById('universe');
+const status = document.getElementById('status');
+const notice = document.getElementById('notice');
+const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+const gl = canvas.getContext('webgl', {alpha:false,antialias:false,depth:false,stencil:false,powerPreference:'default'});
+let program, buffer, locations, frameId=0, lastTime=0, elapsed=0, failed=false;
+let width=1, height=1, pixelRatio=1;
+const vertexSource = `
+precision highp float;
+attribute vec4 aSeed;
+uniform float uTime,uAspect,uPixelRatio;
+varying vec3 vColor;
+varying float vAlpha;
+mat2 rotate(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+void main(){
+ float tau=6.28318530718;
+ float theta=aSeed.x*tau+uTime*(.035+.014*aSeed.z);
+ float phi=aSeed.y*tau+uTime*.06;
+ float strand=floor(aSeed.w*4.)*tau/4.;
+ float center=1.02+.16*sin(3.*theta+uTime*.12);
+ float thickness=.10+.12*(.5+.5*sin(theta*2.-uTime*.15));
+ float tube=thickness*pow(aSeed.z,.65);
+ vec3 p=vec3((center+tube*cos(phi))*cos(theta),(center+tube*cos(phi))*sin(theta),tube*sin(phi));
+ p.z+=.23*sin(theta*2.+strand*.25+uTime*.10);
+ p.xy+=vec2(cos(theta*3.+strand),sin(theta*2.+strand))*.045;
+ float dust=step(.84,aSeed.w);
+ p+=dust*vec3(sin(aSeed.x*421.),cos(aSeed.y*317.),sin(aSeed.z*249.))*(.2+.65*aSeed.z);
+ p.yz=rotate(.96+.13*sin(uTime*.09))*p.yz;
+ p.xz=rotate(.16+.22*sin(uTime*.07))*p.xz;
+ p.xy=rotate(-.32+uTime*.018)*p.xy;
+ p*=min(uAspect*.86,1.22);
+ float perspective=3.4/(3.4-p.z);
+ gl_Position=vec4(p.x*perspective/uAspect,p.y*perspective-.025,0.,1.);
+ float shine=pow(aSeed.z,12.);
+ gl_PointSize=clamp((.8+1.8*shine)*uPixelRatio*perspective,1.,5.);
+ float ribbon=pow(.5+.5*sin(phi+theta*3.+strand+uTime*.08),9.);
+ float hue=.5+.5*sin(theta+uTime*.06);
+ vec3 base=mix(vec3(.12,.25,.60),vec3(.15,.55,.75),hue);
+ vColor=mix(base,vec3(.64,.82,1.),ribbon*.8+shine*.2);
+ float flicker=.86+.14*sin(uTime*(.5+aSeed.z)+aSeed.x*140.);
+ vAlpha=(.15+.36*ribbon+.3*shine)*flicker*mix(1.,.30,dust);
+}`;
+const fragmentSource = `
+precision mediump float;
+varying vec3 vColor;
+varying float vAlpha;
+void main(){
+ float d=length(gl_PointCoord-vec2(.5));
+ if(d>.5)discard;
+ float alpha=(1.-smoothstep(.08,.5,d))*vAlpha;
+ gl_FragColor=vec4(vColor*alpha,alpha);
+}`;
+function fallback(){
+ failed=true;cancelAnimationFrame(frameId);frameId=0;canvas.style.display='none';
+ status.textContent='一片安静的星海';notice.textContent='当前设备显示静态背景';
+}
+if(!gl){fallback();return;}
+function compile(type,source){
+ const shader=gl.createShader(type);gl.shaderSource(shader,source);gl.compileShader(shader);
+ if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS)){
+  const error=gl.getShaderInfoLog(shader);gl.deleteShader(shader);throw new Error(error);
+ }
+ return shader;
+}
+function initialize(){
+ const vertex=compile(gl.VERTEX_SHADER,vertexSource),fragment=compile(gl.FRAGMENT_SHADER,fragmentSource);
+ program=gl.createProgram();gl.attachShader(program,vertex);gl.attachShader(program,fragment);gl.linkProgram(program);
+ gl.deleteShader(vertex);gl.deleteShader(fragment);
+ if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program));
+ gl.useProgram(program);
+ const seeds=new Float32Array(PARTICLE_COUNT*4);let seed=18327;
+ for(let i=0;i<seeds.length;i++){seed=(Math.imul(seed,1664525)+1013904223)>>>0;seeds[i]=seed/4294967296;}
+ buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,seeds,gl.STATIC_DRAW);
+ const attribute=gl.getAttribLocation(program,'aSeed');gl.enableVertexAttribArray(attribute);gl.vertexAttribPointer(attribute,4,gl.FLOAT,false,0,0);
+ locations={time:gl.getUniformLocation(program,'uTime'),aspect:gl.getUniformLocation(program,'uAspect'),ratio:gl.getUniformLocation(program,'uPixelRatio')};
+ gl.disable(gl.DEPTH_TEST);gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE);gl.clearColor(3/255,5/255,11/255,1);
+ canvas.style.display='';failed=false;status.textContent='100,000 颗粒子 · 一片星海';
+}
+function resize(){
+ width=Math.max(1,innerWidth);height=Math.max(1,innerHeight);
+ pixelRatio=Math.min(devicePixelRatio||1,1.5,Math.sqrt(2500000/(width*height)));
+ canvas.width=Math.max(1,Math.round(width*pixelRatio));canvas.height=Math.max(1,Math.round(height*pixelRatio));
+ gl.viewport(0,0,canvas.width,canvas.height);
+}
+function draw(now){
+ frameId=0;if(failed||document.hidden||gl.isContextLost())return;
+ if(lastTime&&!reduced.matches)elapsed+=Math.min((now-lastTime)/1000,.05);lastTime=now;
+ gl.clear(gl.COLOR_BUFFER_BIT);gl.uniform1f(locations.time,elapsed);
+ gl.uniform1f(locations.aspect,width/height);gl.uniform1f(locations.ratio,pixelRatio);
+ gl.drawArrays(gl.POINTS,0,PARTICLE_COUNT);
+ if(!reduced.matches)frameId=requestAnimationFrame(draw);
+}
+function wake(){if(!frameId&&!failed&&!document.hidden)frameId=requestAnimationFrame(draw);}
+addEventListener('resize',()=>{if(!failed){resize();wake();}},{passive:true});
+document.addEventListener('visibilitychange',()=>{cancelAnimationFrame(frameId);frameId=0;lastTime=0;if(!document.hidden)wake();});
+reduced.addEventListener('change',()=>{lastTime=0;notice.textContent=reduced.matches?'已遵循系统设置，暂停动态效果':'在此刻，与宇宙相遇。';wake();});
+canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();fallback();});
+canvas.addEventListener('webglcontextrestored',()=>{try{initialize();resize();lastTime=0;wake();}catch(error){console.error(error);fallback();}});
+try{initialize();resize();if(reduced.matches)notice.textContent='已遵循系统设置，暂停动态效果';wake();}
+catch(error){console.error(error);fallback();}
+})();
+</script>
 </body>
 </html>
