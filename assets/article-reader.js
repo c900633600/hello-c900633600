@@ -77,7 +77,7 @@
       }
       const end = document.createElement('div');
       end.className = 'article-end';
-      end.innerHTML = '<span>— 全文完 —</span><a href="index.html">返回技术文章 →</a>';
+      end.innerHTML = '<span>— 全文完 —</span><a href="index.html">返回全部文章 →</a>';
       article.append(end);
       // 直接访问带章节锚点的链接时，等正文与图表完成布局后再定位。
       if (location.hash) {
