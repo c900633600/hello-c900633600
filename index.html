@@ -1,44 +1,173 @@
 <!doctype html>
 <html lang="zh-CN">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#03050b">
-<meta name="description" content="流动的粒子星海 · Hello Universe。">
-<title>流光 · Hello Universe</title>
-<style>
-:root{color-scheme:dark;font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#03050b;color:#edf3ff}*{box-sizing:border-box}body{margin:0;min-height:100svh;overflow-x:hidden}
-#universe{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
-.fallback{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 55%,#12346b,#0a152f 28%,#03050b 65%)}
-.veil{position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,#03050b66,transparent 25%,transparent 65%,#03050bb3)}
-.page{position:relative;min-height:100svh;display:grid;place-items:center;padding:32px 24px}
-main{text-align:center}
-h1{margin:0;font-family:"Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;font-size:clamp(70px,10vw,144px);line-height:1.08;font-weight:400;letter-spacing:-.035em;text-shadow:0 4px 32px #03050b66}h1 em{font-style:normal;font-weight:400;color:#c7dcf5}
-@media(max-width:600px){h1{font-size:clamp(64px,17vw,100px)}}
-.home-nav{position:absolute;top:30px;right:5vw;z-index:2;display:flex;gap:28px;font-size:13px;letter-spacing:.06em}.home-nav a{color:#b5c7de;text-decoration:none;padding:8px 0}.home-nav a:hover{color:#fff}.home-nav a:focus-visible,.articles-entry:focus-visible{outline:2px solid #a7d4fa;outline-offset:7px}.articles-entry{display:inline-flex;align-items:center;gap:24px;margin-top:40px;border:1px solid #7290b866;border-radius:30px;background:#080f1bb8;color:#d2e4fa;text-decoration:none;font-size:12px;letter-spacing:.06em;padding:13px 23px;transition:background .2s,border-color .2s}.articles-entry:hover{background:#172c43;border-color:#94bddf}@media(max-width:600px){.home-nav{top:20px;right:24px;font-size:12px;gap:22px}.articles-entry{margin-top:32px}}
-</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#03050b">
+    <meta name="description" content="流动的粒子星海 · Hello Universe。">
+    <title>流光 · Hello Universe</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #03050b;
+            color: #edf3ff
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            min-height: 100svh;
+            overflow-x: hidden
+        }
+
+        #universe {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none
+        }
+
+        .fallback {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 55%, #12346b, #0a152f 28%, #03050b 65%)
+        }
+
+        .veil {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(180deg, #03050b66, transparent 25%, transparent 65%, #03050bb3)
+        }
+
+        .page {
+            position: relative;
+            min-height: 100svh;
+            display: grid;
+            place-items: center;
+            padding: 32px 24px
+        }
+
+        main {
+            text-align: center
+        }
+
+        h1 {
+            margin: 0;
+            font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+            font-size: clamp(70px, 10vw, 144px);
+            line-height: 1.08;
+            font-weight: 400;
+            letter-spacing: -.035em;
+            text-shadow: 0 4px 32px #03050b66
+        }
+
+        h1 em {
+            font-style: normal;
+            font-weight: 400;
+            color: #c7dcf5
+        }
+
+        @media(max-width:600px) {
+            h1 {
+                font-size: clamp(64px, 17vw, 100px)
+            }
+        }
+
+        .home-nav {
+            position: absolute;
+            top: 30px;
+            right: 5vw;
+            z-index: 2;
+            display: flex;
+            gap: 28px;
+            font-size: 13px;
+            letter-spacing: .06em
+        }
+
+        .home-nav a {
+            color: #b5c7de;
+            text-decoration: none;
+            padding: 8px 0
+        }
+
+        .home-nav a:hover {
+            color: #fff
+        }
+
+        .home-nav a:focus-visible,
+        .articles-entry:focus-visible {
+            outline: 2px solid #a7d4fa;
+            outline-offset: 7px
+        }
+
+        .articles-entry {
+            display: inline-flex;
+            align-items: center;
+            gap: 24px;
+            margin-top: 40px;
+            border: 1px solid #7290b866;
+            border-radius: 30px;
+            background: #080f1bb8;
+            color: #d2e4fa;
+            text-decoration: none;
+            font-size: 12px;
+            letter-spacing: .06em;
+            padding: 13px 23px;
+            transition: background .2s, border-color .2s
+        }
+
+        .articles-entry:hover {
+            background: #172c43;
+            border-color: #94bddf
+        }
+
+        @media(max-width:600px) {
+            .home-nav {
+                top: 20px;
+                right: 24px;
+                font-size: 12px;
+                gap: 22px
+            }
+
+            .articles-entry {
+                margin-top: 32px
+            }
+        }
+    </style>
 </head>
+
 <body>
-<div class="fallback" aria-hidden="true"></div>
-<canvas id="universe" aria-hidden="true"></canvas>
-<div class="veil" aria-hidden="true"></div>
-<nav class="home-nav" aria-label="主导航"><a href="index.html" aria-current="page">首页</a><a href="articles/index.html">技术文章</a></nav>
-<div class="page">
-<main><h1>Hello,<br><em>Universe.</em></h1><a class="articles-entry" href="articles/index.html">浏览技术文章 <span aria-hidden="true">→</span></a></main>
-</div>
-<script>
-(() => {
-'use strict';
-const PARTICLE_COUNT = 80000;
-// 粒子直径（CSS 像素）。所有粒子使用同一个大小，不受远近影响。
-const PARTICLE_SIZE = 3.0;
-const canvas = document.getElementById('universe');
-const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-const gl = canvas.getContext('webgl', {alpha:false,antialias:false,depth:false,stencil:false,powerPreference:'default'});
-let program, buffer, locations, frameId=0, lastTime=0, elapsed=0, failed=false;
-let width=1, height=1, pixelRatio=1;
-const derivatives = gl && gl.getExtension('OES_standard_derivatives');
-const vertexSource = `
+    <div class="fallback" aria-hidden="true"></div>
+    <canvas id="universe" aria-hidden="true"></canvas>
+    <div class="veil" aria-hidden="true"></div>
+    <nav class="home-nav" aria-label="主导航"><a href="index.html" aria-current="page">首页</a><a
+            href="articles/index.html">blogs</a></nav>
+    <div class="page">
+        <main>
+            <h1>Hello,<br><em>Universe.</em></h1>
+            <a class="articles-entry" href="articles/index.html">浏览 <span aria-hidden="true">→</span></a>
+        </main>
+    </div>
+    <script>
+        (() => {
+            'use strict';
+            const PARTICLE_COUNT = 150000;
+            // 粒子直径（CSS 像素）。所有粒子使用同一个大小，不受远近影响。
+            const PARTICLE_SIZE = 1.5;
+            const canvas = document.getElementById('universe');
+            const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+            const gl = canvas.getContext('webgl', { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: 'default' });
+            let program, buffer, locations, frameId = 0, lastTime = 0, elapsed = 0, failed = false;
+            let width = 1, height = 1, pixelRatio = 1;
+            const derivatives = gl && gl.getExtension('OES_standard_derivatives');
+            const vertexSource = `
 precision highp float;
 attribute vec4 aSeed;
 uniform float uTime,uAspect,uPixelRatio,uPointSize;
@@ -80,7 +209,7 @@ void main(){
  // 保留少量稀疏的外围尘埃；主体亮度统一，不混入独立闪烁。
  vAlpha=.56*mix(1.,.38,dust);
 }`;
-const fragmentSource = (derivatives ? '#extension GL_OES_standard_derivatives : enable\n#define EDGE_DERIVATIVES\n' : '') + `
+            const fragmentSource = (derivatives ? '#extension GL_OES_standard_derivatives : enable\n#define EDGE_DERIVATIVES\n' : '') + `
 precision mediump float;
 varying vec3 vColor;
 varying float vAlpha;
@@ -97,63 +226,64 @@ void main(){
  float alpha=coverage*vAlpha;
  gl_FragColor=vec4(vColor*alpha,alpha);
 }`;
-function fallback(){
- failed=true;cancelAnimationFrame(frameId);frameId=0;canvas.style.display='none';
-}
-if(!gl){fallback();return;}
-function compile(type,source){
- const shader=gl.createShader(type);gl.shaderSource(shader,source);gl.compileShader(shader);
- if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS)){
-  const error=gl.getShaderInfoLog(shader);gl.deleteShader(shader);throw new Error(error);
- }
- return shader;
-}
-function initialize(){
- // 上下文恢复后需要重新启用着色器使用的扩展。
- if(derivatives)gl.getExtension('OES_standard_derivatives');
- const vertex=compile(gl.VERTEX_SHADER,vertexSource),fragment=compile(gl.FRAGMENT_SHADER,fragmentSource);
- program=gl.createProgram();gl.attachShader(program,vertex);gl.attachShader(program,fragment);gl.linkProgram(program);
- gl.deleteShader(vertex);gl.deleteShader(fragment);
- if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program));
- gl.useProgram(program);
- const seeds=new Float32Array(PARTICLE_COUNT*4);let seed=18327;
- for(let i=0;i<seeds.length;i++){seed=(Math.imul(seed,1664525)+1013904223)>>>0;seeds[i]=seed/4294967296;}
- buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,seeds,gl.STATIC_DRAW);
- const attribute=gl.getAttribLocation(program,'aSeed');gl.enableVertexAttribArray(attribute);gl.vertexAttribPointer(attribute,4,gl.FLOAT,false,0,0);
- locations={time:gl.getUniformLocation(program,'uTime'),aspect:gl.getUniformLocation(program,'uAspect'),ratio:gl.getUniformLocation(program,'uPixelRatio'),size:gl.getUniformLocation(program,'uPointSize')};
- gl.disable(gl.DEPTH_TEST);
- gl.enable(gl.BLEND);
- // 预乘透明度合成，避免大量粒子相叠后累积成一片白雾。
- gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
- gl.clearColor(3/255,5/255,11/255,1);
- canvas.style.display='';
- failed=false;
-}
-function resize(){
- width=Math.max(1,innerWidth);height=Math.max(1,innerHeight);
- // 按设备像素绘制（最高 2 倍），不再因总像素上限把画布放大显示。
- pixelRatio=Math.min(devicePixelRatio||1,2);
- canvas.width=Math.max(1,Math.round(width*pixelRatio));canvas.height=Math.max(1,Math.round(height*pixelRatio));
- gl.viewport(0,0,canvas.width,canvas.height);
-}
-function draw(now){
- frameId=0;if(failed||document.hidden||gl.isContextLost())return;
- if(lastTime&&!reduced.matches)elapsed+=Math.min((now-lastTime)/1000,.05);lastTime=now;
- gl.clear(gl.COLOR_BUFFER_BIT);gl.uniform1f(locations.time,elapsed);
- gl.uniform1f(locations.aspect,width/height);gl.uniform1f(locations.ratio,pixelRatio);
- gl.uniform1f(locations.size,PARTICLE_SIZE);
- gl.drawArrays(gl.POINTS,0,PARTICLE_COUNT);
- if(!reduced.matches)frameId=requestAnimationFrame(draw);
-}
-function wake(){if(!frameId&&!failed&&!document.hidden)frameId=requestAnimationFrame(draw);}
-addEventListener('resize',()=>{if(!failed){resize();wake();}},{passive:true});
-document.addEventListener('visibilitychange',()=>{cancelAnimationFrame(frameId);frameId=0;lastTime=0;if(!document.hidden)wake();});
-reduced.addEventListener('change',()=>{lastTime=0;wake();});
-canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();fallback();});
-canvas.addEventListener('webglcontextrestored',()=>{try{initialize();resize();lastTime=0;wake();}catch(error){console.error(error);fallback();}});
-try{initialize();resize();wake();}
-catch(error){console.error(error);fallback();}
-})();
-</script>
+            function fallback() {
+                failed = true; cancelAnimationFrame(frameId); frameId = 0; canvas.style.display = 'none';
+            }
+            if (!gl) { fallback(); return; }
+            function compile(type, source) {
+                const shader = gl.createShader(type); gl.shaderSource(shader, source); gl.compileShader(shader);
+                if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                    const error = gl.getShaderInfoLog(shader); gl.deleteShader(shader); throw new Error(error);
+                }
+                return shader;
+            }
+            function initialize() {
+                // 上下文恢复后需要重新启用着色器使用的扩展。
+                if (derivatives) gl.getExtension('OES_standard_derivatives');
+                const vertex = compile(gl.VERTEX_SHADER, vertexSource), fragment = compile(gl.FRAGMENT_SHADER, fragmentSource);
+                program = gl.createProgram(); gl.attachShader(program, vertex); gl.attachShader(program, fragment); gl.linkProgram(program);
+                gl.deleteShader(vertex); gl.deleteShader(fragment);
+                if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program));
+                gl.useProgram(program);
+                const seeds = new Float32Array(PARTICLE_COUNT * 4); let seed = 18327;
+                for (let i = 0; i < seeds.length; i++) { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; seeds[i] = seed / 4294967296; }
+                buffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buffer); gl.bufferData(gl.ARRAY_BUFFER, seeds, gl.STATIC_DRAW);
+                const attribute = gl.getAttribLocation(program, 'aSeed'); gl.enableVertexAttribArray(attribute); gl.vertexAttribPointer(attribute, 4, gl.FLOAT, false, 0, 0);
+                locations = { time: gl.getUniformLocation(program, 'uTime'), aspect: gl.getUniformLocation(program, 'uAspect'), ratio: gl.getUniformLocation(program, 'uPixelRatio'), size: gl.getUniformLocation(program, 'uPointSize') };
+                gl.disable(gl.DEPTH_TEST);
+                gl.enable(gl.BLEND);
+                // 预乘透明度合成，避免大量粒子相叠后累积成一片白雾。
+                gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+                gl.clearColor(3 / 255, 5 / 255, 11 / 255, 1);
+                canvas.style.display = '';
+                failed = false;
+            }
+            function resize() {
+                width = Math.max(1, innerWidth); height = Math.max(1, innerHeight);
+                // 按设备像素绘制（最高 2 倍），不再因总像素上限把画布放大显示。
+                pixelRatio = Math.min(devicePixelRatio || 1, 2);
+                canvas.width = Math.max(1, Math.round(width * pixelRatio)); canvas.height = Math.max(1, Math.round(height * pixelRatio));
+                gl.viewport(0, 0, canvas.width, canvas.height);
+            }
+            function draw(now) {
+                frameId = 0; if (failed || document.hidden || gl.isContextLost()) return;
+                if (lastTime && !reduced.matches) elapsed += Math.min((now - lastTime) / 1000, .05); lastTime = now;
+                gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform1f(locations.time, elapsed);
+                gl.uniform1f(locations.aspect, width / height); gl.uniform1f(locations.ratio, pixelRatio);
+                gl.uniform1f(locations.size, PARTICLE_SIZE);
+                gl.drawArrays(gl.POINTS, 0, PARTICLE_COUNT);
+                if (!reduced.matches) frameId = requestAnimationFrame(draw);
+            }
+            function wake() { if (!frameId && !failed && !document.hidden) frameId = requestAnimationFrame(draw); }
+            addEventListener('resize', () => { if (!failed) { resize(); wake(); } }, { passive: true });
+            document.addEventListener('visibilitychange', () => { cancelAnimationFrame(frameId); frameId = 0; lastTime = 0; if (!document.hidden) wake(); });
+            reduced.addEventListener('change', () => { lastTime = 0; wake(); });
+            canvas.addEventListener('webglcontextlost', event => { event.preventDefault(); fallback(); });
+            canvas.addEventListener('webglcontextrestored', () => { try { initialize(); resize(); lastTime = 0; wake(); } catch (error) { console.error(error); fallback(); } });
+            try { initialize(); resize(); wake(); }
+            catch (error) { console.error(error); fallback(); }
+        })();
+    </script>
 </body>
+
 </html>
